@@ -1,0 +1,1 @@
+* Improvement support to converter more file types

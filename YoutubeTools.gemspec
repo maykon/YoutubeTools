@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
      "Rakefile",
      "TODO.rdoc",
      "VERSION",
-     "YoutubeTools.gemspec",
      "init.rb",
      "lib/youtube_tools.rb",
      "lib/youtube_tools/converter.rb",

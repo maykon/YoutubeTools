@@ -39,7 +39,7 @@ Add it to your Gemfile:
 
 Copyright (c) 2010:
 
-* Maykon Luís Capellari {[http://github.com/maykon] (maykon_capellari@yahoo.com.br)}
+* Maykon Luís Capellari [http://github.com/maykon] (maykon_capellari@yahoo.com.br)
   
 == License
 

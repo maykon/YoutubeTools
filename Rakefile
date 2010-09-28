@@ -9,7 +9,7 @@ begin
     gem.description = %Q{TODO: longer description of your gem}
     gem.email = "maykon_capellari@yahoo.com.br"
     gem.homepage = "http://github.com/maykon/YoutubeTools"
-    gem.authors = ["Maykon Luís Capellari"]
+    gem.authors = ["Maykon Luis Capellari"]
     gem.add_development_dependency "minitest", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

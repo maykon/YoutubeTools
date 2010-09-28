@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "YoutubeTools"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Gem from search, download and converter youtube videos to mp3}
+    gem.description = %Q{Gem from search, download and converter youtube videos to mp3}
     gem.email = "maykon_capellari@yahoo.com.br"
     gem.homepage = "http://github.com/maykon/YoutubeTools"
     gem.authors = ["Maykon Luis Capellari"]

@@ -1,28 +1,25 @@
 module YoutubeTools
 	class Downloader
-		attr_accessor	:href, :name, :full_path, :content, :link_dw, :percent, :total
-	
+		attr_accessor	:href, :name, :quality, :full_path, :link_dw, :links
+		
 		LINK_PATTERN = /"fmt_stream_map": ("[\w |:\/\\.?=&\,%-]+")/
 		NAME_PATTERN = /-\s+(.*)\s*/
+		QUALITY = { :low => 5, :mp4 => 18, :mid => 34, :hd => 22, :hight => 35 }
 	
-		def initialize(href, path=nil)
+		def initialize(href, options={})
 			@href = href
-			@music_folder = path.nil? ? FOLDER_PATH : path
-
+			@video_folder = options[:path].nil? ? FOLDER_PATH : options[:path]
+			@quality = options[:quality].nil? ? set_quality(:low) : set_quality(options[:quality])
+			@error_quality = 0
+			@links = {}
+			
 			create_folder
-			init_information	
+			init_information
 		end
 		
-		def name
-			@name ||= search_name(@doc.search("//title").first)
-		end
-		
-		def link_dw
-			@link_dw ||= search_link(@doc.search("//script")[8].to_plain_text)
-		end
-		
-		def full_path
-			@full_path ||= File.join(@music_folder, name.split("/").last)
+		def set_quality(quality)
+			return QUALITY[quality] if QUALITY.include? quality
+			QUALITY[:low]
 		end
 				
 		# method dowload video from selected folder
@@ -40,46 +37,61 @@ module YoutubeTools
 						print "..#{@percent}%" if @percent != old_percent
 					}).read)
 			end
+			puts "Download complete!"
 		end
 		
 		protected
 		def init_information
-			@content = open(@href)
-			@doc = Hpricot(@content)
-			@name = search_name(@doc.search("//title").first)
-			@link_dw = search_link(@doc.search("//script")[8].to_plain_text)
-			@full_path = File.join(@music_folder, name.split("/").last)
+			content = open(@href)
+			doc = Hpricot(content)
+			@name = search_name(doc.search("//title").first)
+			@link_dw = search_link(doc)
+			@full_path = File.join(@video_folder, @name.split("/").last)
 		end
 		
-		# method fo search link to download video 
-		# values for type :
-		# 5 = low quality
-		# 18 = mid quality (mp4)
-		# 22 = HD quality 
-		# 34 or 4 = mid quality
-		# 35 = hight quality
-		def search_link(link_dw, type=5)
-			url_pattern = /,#{type}\|(http[^\|]+)(?:\|.*)?$/
-			link = link_dw.gsub(LINK_PATTERN).first
-			link = link[19...link.length]
-			link = link.gsub(url_pattern).first
-			link = link.gsub(/[\\,"]/, "").gsub(/(\|\|.*)/, "")
-			link[2..link.length]		
+		def quality_key(value)
+			case value
+				when 18
+					return :mp4
+				when 22
+					return :hd
+				when 34, 4
+					return :mid
+				when 35
+					return :hight
+				else
+					return :low
+			end
 		end
 		
 		# method for search name for video
 		def search_name(content)
 			name = content.to_plain_text.gsub(NAME_PATTERN).first
-			name = name[1..name.length].gsub(/[\n\s()`'"\/,;<>?!&%$@*+=.]/, "")
+			name = name[1..name.length].gsub(/[\n\s()`'"\/,;<>?!&%$@*+=.\[\]]/, "")
 			name[0..name.length-1]
+		end
+		
+		def search_link(doc)
+			fmt = doc.to_html.gsub(LINK_PATTERN).first
+			fmt = fmt.gsub!(/([^,]+)/)
+			fmt.each_with_index do |l, i|
+				l.gsub!(/"fmt_stream_map": "/, "") if i == 0
+				ql = l.gsub(/^(\d)+|$/).first
+				qlk = quality_key(ql.to_i)
+				l.gsub!(/(^(\d)+\|)/, "").gsub!(/[\\,"]/, "").gsub!(/(\|\|.*)/, "")
+				@links[qlk] = l
+			end
+			quality_present = @links.keys.include? quality_key(@quality)
+			return @links[quality_key(@quality)] if quality_present
+			@links[:low]
 		end
 		
 		# method create folder case not exist
 		def create_folder
 			#create folder if no exist
-			unless File.exist? @music_folder
-				puts "Creating #{@music_folder}"
-				FileUtils.mkdir_p(@music_folder)
+			unless File.exist? @video_folder
+				puts "Creating #{@video_folder}"
+				FileUtils.mkdir_p(@video_folder)
 			end
 		end
 	end

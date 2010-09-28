@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{YoutubeTools}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Maykon Luis Capellari"]
-  s.date = %q{2010-09-27}
+  s.date = %q{2010-09-28}
   s.description = %q{Gem from search, download and converter youtube videos to mp3}
   s.email = %q{maykon_capellari@yahoo.com.br}
   s.extra_rdoc_files = [

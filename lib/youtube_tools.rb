@@ -3,7 +3,7 @@ require 'hpricot'
 require 'open-uri'
 
 module YoutubeTools
-	FOLDER_PATH = File.join(ENV['HOME'],"/Musica/RTubeToMp3") # Folder Path from musics
+	FOLDER_PATH = File.join(ENV['HOME'],"/Musica/YoutubeTools") # Folder Path from musics
 	
 	CHARACTERS = { " " => "+", "$" => "%24", "-" => "%2D", "_" => "%5F", "." => "%2E", "+" => "%2B",
 									"!" => "%21", "*" => "%2A", "\"" => "%22", "'" => "%27", "(" => "%28", ")" => "%29",
